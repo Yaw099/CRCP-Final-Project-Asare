@@ -35,6 +35,7 @@ public class MOrderMarkovGenerator<E> {
 		sortArraysOutput.symbolsListSorted = new ArrayList<E>(symbols);
 		sortArraysOutput.ttSorted = new ArrayList<ArrayList<Float>>();
 		sortArraysOutput.sequencesSorted = new ArrayList<ArrayList<E>>(sequences);
+		
 
 	
 		//sort the symbols list
@@ -67,6 +68,8 @@ public class MOrderMarkovGenerator<E> {
 
 		return sortArraysOutput;
 	}
+
+	
 
 	//by default, don't round. See below for the other printProbabilityDistribution method functionality
 	public void printProbabilityDistribution(ArrayList<ArrayList<E>> sequences, ArrayList<E> symbols, ArrayList<ArrayList<Float>> tt, int mOrder)
