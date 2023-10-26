@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MOrderMarkovGenerator<E> {
+public class MOrderMarkovGenerator<E>  extends ProbabilityGenerator<E>{
 	
 	//nested convenience class to return two arrays from sortTransitionTable() method
 	//students do not need to use this class
@@ -20,6 +20,23 @@ public class MOrderMarkovGenerator<E> {
 		public ArrayList<E> symbolsListSorted;
 		public ArrayList<ArrayList<E>> sequencesSorted;
 		ArrayList<ArrayList<Float>> ttSorted;
+	}
+
+	int M = 0;
+	MOrderMarkovGenerator(int order){
+		M = order;
+	}
+	ArrayList<ArrayList<Float>> transitionTable = new ArrayList<ArrayList<Float>>();
+	ArrayList<int[]> uniqueAlphabetSequences = new ArrayList<int[]>();
+	int[] curSequence = new int[M];
+
+
+
+
+
+	public void train(ArrayList<E> newTokens)
+	{
+
 	}
 
 	//sort the symbols list and the counts list, so that we can easily print the probability distribution for testing
@@ -69,7 +86,7 @@ public class MOrderMarkovGenerator<E> {
 		return sortArraysOutput;
 	}
 
-	
+
 
 	//by default, don't round. See below for the other printProbabilityDistribution method functionality
 	public void printProbabilityDistribution(ArrayList<ArrayList<E>> sequences, ArrayList<E> symbols, ArrayList<ArrayList<Float>> tt, int mOrder)
