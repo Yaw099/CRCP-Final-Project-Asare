@@ -40,7 +40,7 @@ public class MOrderMarkovGenerator<E> extends ProbabilityGenerator<E> {
 		}
 		if (lastIndex > -1){
 			for (int i = M - 1; i < newTokens.size() - 1; ++i){
-				for (int j = 0; j < M; ++j) {// Add sequences into Arraylist
+				for (int j = 1; j < M; ++j) {// Add sequences into Arraylist
 					curSequence.add(newTokens.get(lastIndex));
 					uniqueAlphabetSequences.add(curSequence);
 				}
