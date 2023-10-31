@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MOrderMarkovGenerator<E> extends ProbabilityGenerator<E> {
+public class MOrderMarkovGenerator<E> extends MarkovChainGenerator<E> {
 
 	// nested convenience class to return two arrays from sortTransitionTable()
 	// method
@@ -33,19 +33,32 @@ public class MOrderMarkovGenerator<E> extends ProbabilityGenerator<E> {
 	ArrayList<E> curSequence = new ArrayList<E>();
 
 	public void train(ArrayList<E> newTokens) {
-		int lastIndex = -1;
+		int rowIndex = -1;
 		if (tokenCounts == null) {
 			tokenCounts = new ArrayList<Float>();
 			transitionTable = new ArrayList<ArrayList<Float>>();
 		}
-		if (lastIndex > -1){
-			for (int i = M - 1; i < newTokens.size() - 1; ++i){
-				for (int j = 1; j < M; ++j) {// Add sequences into Arraylist
-					curSequence.add(newTokens.get(lastIndex));
+		for (int i = M - 1; i < newTokens.size() - 1; ++i) {
+			int tokenIndex = alphabet.indexOf(newTokens.get(i));
+			for (int j = 1; j < M; ++j) // Add sequences into Arraylist
+			{
+				curSequence.add(newTokens.get(rowIndex));
+			}
+			for (int k = 0; k < uniqueAlphabetSequences.size(); ++k)
+			{
+				if (!(curSequence == uniqueAlphabetSequences.get(k)))
+				{
+					rowIndex = uniqueAlphabetSequences.size();
 					uniqueAlphabetSequences.add(curSequence);
+					ArrayList<Float> row = new ArrayList<>();// create a new array that is the size of the alphabet
+					for (int j = 0; j < alphabet.size(); ++j) 
+					{
+						row.add(0.f);
+					}
+					transitionTable.add(row);
 				}
-			++lastIndex;
-		}
+			}
+		++rowIndex;
 		}
 	}
 
