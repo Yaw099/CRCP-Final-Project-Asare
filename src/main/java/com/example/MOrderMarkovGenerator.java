@@ -57,6 +57,14 @@ public class MOrderMarkovGenerator<E> extends MarkovChainGenerator<E> {
 					}
 					transitionTable.add(row);
 				}
+				tokenIndex = alphabet.indexOf(i + 1);
+				if (tokenIndex == -1)
+				{
+					tokenIndex = alphabet.size();
+					alphabet.add(newTokens.get(i));
+				}
+				float hold = transitionTable.get(rowIndex).get(tokenIndex);
+				transitionTable.get(rowIndex).set(tokenIndex, hold + 1.f);
 			}
 		++rowIndex;
 		}
