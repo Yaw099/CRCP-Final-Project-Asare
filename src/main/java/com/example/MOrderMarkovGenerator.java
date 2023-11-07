@@ -46,7 +46,7 @@ public class MOrderMarkovGenerator<E> extends MarkovChainGenerator<E> {
 			}
 			for (int k = 0; k < uniqueAlphabetSequences.size(); ++k)
 			{
-				if (!(curSequence == uniqueAlphabetSequences.get(k)))
+				if (curSequence != uniqueAlphabetSequences.get(k))
 				{
 					rowIndex = uniqueAlphabetSequences.size();
 					uniqueAlphabetSequences.add(curSequence);
