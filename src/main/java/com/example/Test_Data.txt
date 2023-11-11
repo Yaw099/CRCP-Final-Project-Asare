@@ -1,11 +1,8 @@
 Week 1
 rainy,cloudy,sunny,sunny,pcloudy,cloudy,stormy
-
 Week 2
 stormy,stormy,cloudy,pcloudy,windy,sunny,cloudy
-
 Week 3
 windy,cloudy,snowy,snowy,pcloudy,sunny,snowy
-
 Week 4
 snowy,hail,hail,stormy,snowy,windy,sunny
