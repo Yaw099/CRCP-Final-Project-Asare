@@ -10,7 +10,7 @@ public class UnitTests {
         // src/main/java/com/example/Test_Data.txt
         // Create an instance of ProbabilityGenerator and WeatherModel
         WeatherModel weatherModel = new WeatherModel();
-        ProbabilityGenerator generator = new ProbabilityGenerator("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt\"", weatherModel);
+        ProbabilityGenerator generator = new ProbabilityGenerator(weatherModel);
 
         // Call and test methods of ProbabilityGenerator
         testReadAndPreprocessWeatherData(generator);
@@ -28,7 +28,7 @@ public class UnitTests {
         // C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/
         // src/main/java/com/example/
         // C:/Users/David/Documents/GitHub/CRCP-Final-Project-Asare/src/main/java/com/example
-        List<String> data = generator.readAndPreprocessWeatherData("src/main/java/com/example");
+        List<String> data = generator.readAndPreprocessWeatherData("src/main/java/com/example/Test_Data.txt");
         System.out.println("Read and preprocessed Weather Data: " + data);
     }
 
@@ -57,12 +57,12 @@ public class UnitTests {
     }    
 
     private static void testWeatherModelEffects(WeatherModel weatherModel) {
-        String currentWeather = "sunny"; // Example current weather
-    String alteredWeather = weatherModel.simulateNaturalDisaster(currentWeather);
-    System.out.println("Weather with Natural Disaster Effect: " + alteredWeather);
+        String[] weatherConditions = {"sunny","cloudy","rainy","stromy","snowy","windy","hail"};
 
-    // Test other scenarios, possibly looping through different weather states
-    // and checking the output of simulateNaturalDisaster
+        for (String currentWeather : weatherConditions) {
+            String alteredWeather = weatherModel.simulateNaturalDisaster(currentWeather);
+            System.out.println("Original Weather: " + currentWeather + " | Altered by Disaster: " + alteredWeather);
+        }
     }
 
 

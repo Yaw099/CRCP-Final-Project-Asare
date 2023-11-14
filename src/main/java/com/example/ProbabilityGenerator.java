@@ -15,7 +15,7 @@ public class ProbabilityGenerator {
      * @param filePath The path to the file containing weather data.
      * @param weatherModel An instance of WeatherModel to be used for preprocessing the data
      */
-    public ProbabilityGenerator(String filePath, WeatherModel weatherModel) {
+    public ProbabilityGenerator(WeatherModel weatherModel) {
         this.weatherModel = weatherModel;
         this.weatherData = new ArrayList<>();
     }
