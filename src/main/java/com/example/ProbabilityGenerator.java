@@ -6,9 +6,11 @@ import java.nio.file.*;
 public class ProbabilityGenerator {
 
     List<String> weatherData = new ArrayList<>();
+    private WeatherModel weatherModel;
    
-    public ProbabilityGenerator() {
+    public ProbabilityGenerator(WeatherModel weatherModel) {
         this.weatherData = new ArrayList<>();
+        this.weatherModel = weatherModel;
     }
 
     /**
