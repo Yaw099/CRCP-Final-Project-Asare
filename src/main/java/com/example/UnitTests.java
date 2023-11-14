@@ -2,7 +2,7 @@ package com.example;
 
 import java.util.*;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+// import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 public class UnitTests {
 
@@ -13,9 +13,10 @@ public class UnitTests {
         ProbabilityGenerator generator = new ProbabilityGenerator("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt\"", weatherModel);
 
         // Call and test methods of ProbabilityGenerator
-        testReadWeatherData(generator);
+        testReadAndPreprocessWeatherData(generator);
         testValidateData(generator);
         testCalculateTransitionProbabilities(generator);
+        testWeatherModelEffects(weatherModel);
     }
 
 
@@ -23,12 +24,12 @@ public class UnitTests {
      *  Tests for the Probability Generatot
      */
 
-    private static void testReadWeatherData(ProbabilityGenerator generator) {
+    private static void testReadAndPreprocessWeatherData(ProbabilityGenerator generator) {
         // C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/
         // src/main/java/com/example/
-        List<String> data = generator.readWeatherData("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt");
-        System.out.println("Read Weather Data: " + data);
-        // Add more logic to verify the data if necessary
+        // C:/Users/David/Documents/GitHub/CRCP-Final-Project-Asare/src/main/java/com/example
+        List<String> data = generator.readAndPreprocessWeatherData("src/main/java/com/example");
+        System.out.println("Read and preprocessed Weather Data: " + data);
     }
 
     private static void testValidateData(ProbabilityGenerator generator) {
@@ -40,7 +41,8 @@ public class UnitTests {
     private static void testCalculateTransitionProbabilities(ProbabilityGenerator generator) {
         int orderM = 3; // Example order
         Map<List<String>, Map<String, Double>> probabilities = generator.calculateTransitionProbabilities(orderM);
-        // System.out.println("Calculated Transition Probabilities: " + probabilities);
+        System.out.println("Calculated Transition Probabilities: " + probabilities);
+
         // Format and display the transition probabilities
         for (Map.Entry<List<String>, Map<String, Double>> entry : probabilities.entrySet()) {
             List<String> stateSequence = entry.getKey();
@@ -54,6 +56,14 @@ public class UnitTests {
         // Further validation of the probabilities can be done here
     }    
 
+    private static void testWeatherModelEffects(WeatherModel weatherModel) {
+        String currentWeather = "sunny"; // Example current weather
+    String alteredWeather = weatherModel.simulateNaturalDisaster(currentWeather);
+    System.out.println("Weather with Natural Disaster Effect: " + alteredWeather);
+
+    // Test other scenarios, possibly looping through different weather states
+    // and checking the output of simulateNaturalDisaster
+    }
 
 
     

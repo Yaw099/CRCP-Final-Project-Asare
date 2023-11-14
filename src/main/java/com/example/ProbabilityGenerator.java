@@ -27,7 +27,7 @@ public class ProbabilityGenerator {
      * @param filePath The path to the file containing weather data.
      * @return A list of preprocessed weather states.
      */
-    private List<String> readAndPreprocessWeatherData(String filePath) {
+    public List<String> readAndPreprocessWeatherData(String filePath) {
         List<String> data = readWeatherData(filePath); // method to read data
         return preprocessData(data); // Method to preprocess data
     }
