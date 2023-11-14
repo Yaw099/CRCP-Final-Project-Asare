@@ -8,8 +8,9 @@ public class UnitTests {
 
     public static void main(String[] args) {
         // src/main/java/com/example/Test_Data.txt
-        // Create an instance of ProbabilityGenerator
-        ProbabilityGenerator generator = new ProbabilityGenerator();
+        // Create an instance of ProbabilityGenerator and WeatherModel
+        WeatherModel weatherModel = new WeatherModel();
+        ProbabilityGenerator generator = new ProbabilityGenerator("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt\"", weatherModel);
 
         // Call and test methods of ProbabilityGenerator
         testReadWeatherData(generator);

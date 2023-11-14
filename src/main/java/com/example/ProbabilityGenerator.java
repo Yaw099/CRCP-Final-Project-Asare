@@ -5,12 +5,50 @@ import java.nio.file.*;
 
 public class ProbabilityGenerator {
 
-    List<String> weatherData = new ArrayList<>();
+    private List<String> weatherData;
     private WeatherModel weatherModel;
    
-    public ProbabilityGenerator(WeatherModel weatherModel) {
-        this.weatherData = new ArrayList<>();
+    /**
+     * Constructs a ProbabilityGenerator with a specified file path and a WeatherModel instance.
+     * Reads and preprocesses weather upon instantiation.
+     * 
+     * @param filePath The path to the file containing weather data.
+     * @param weatherModel An instance of WeatherModel to be used for preprocessing the data
+     */
+    public ProbabilityGenerator(String filePath, WeatherModel weatherModel) {
         this.weatherModel = weatherModel;
+        this.weatherData = new ArrayList<>();
+    }
+
+    /**
+     * Reads weather data from a file and preprocesses it using the WeatherModel.
+     * Preprocessing may include adjusting for natural disasters and seasonal changes.
+     * 
+     * @param filePath The path to the file containing weather data.
+     * @return A list of preprocessed weather states.
+     */
+    private List<String> readAndPreprocessWeatherData(String filePath) {
+        List<String> data = readWeatherData(filePath); // method to read data
+        return preprocessData(data); // Method to preprocess data
+    }
+
+    /**
+     * Preprocesses the weather data based on the WeatherModel.
+     * This may involve adjusting weather states to reflect the impact of natural disasters
+     * and seasonal effects.
+     * 
+     * @param data The original list of weather states.
+     * @return A list of adjusted weather states after preprocessing.
+     */
+    private List<String> preprocessData(List<String> data) {
+        // Use WeatherModel to adjust data for natural disasters and season
+        List<String> preprocessedData = new ArrayList<>();
+        for (String weatherState: data) {
+             String adjustedState = weatherModel.simulteNaturalDisaster(weatherState);
+            // to add: logic for seasonal adjustments
+            preprocessedData.add(adjustedState);
+        }
+        return preprocessedData;
     }
 
     /**

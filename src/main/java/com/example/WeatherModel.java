@@ -21,7 +21,7 @@ public class WeatherModel {
      * @param currentWeather The current weather state.
      * @return The altered weather state due to the natural disaster.
      */
-    public static String simulteNaturalDisaster(String currentWeather) {
+    public String simulteNaturalDisaster(String currentWeather) {
         if (checkForNaturalDisaster()) {
             // Logic to modify the weather based on a natural disaster
             switch (currentWeather) {
