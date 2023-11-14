@@ -23,7 +23,9 @@ public class UnitTests {
      */
 
     private static void testReadWeatherData(ProbabilityGenerator generator) {
-        List<String> data = generator.readWeatherData("src/main/java/com/example/Test_Data.txt");
+        // C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/
+        // src/main/java/com/example/
+        List<String> data = generator.readWeatherData("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt");
         System.out.println("Read Weather Data: " + data);
         // Add more logic to verify the data if necessary
     }
