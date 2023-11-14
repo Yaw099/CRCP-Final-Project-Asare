@@ -44,7 +44,7 @@ public class ProbabilityGenerator {
         // Use WeatherModel to adjust data for natural disasters and season
         List<String> preprocessedData = new ArrayList<>();
         for (String weatherState: data) {
-             String adjustedState = weatherModel.simulteNaturalDisaster(weatherState);
+             String adjustedState = weatherModel.simulateNaturalDisaster(weatherState);
             // to add: logic for seasonal adjustments
             preprocessedData.add(adjustedState);
         }
