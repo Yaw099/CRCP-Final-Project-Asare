@@ -55,12 +55,23 @@ public class UnitTests {
         }
         // Further validation of the probabilities can be done here
     }    
-
+    /**
+     * Tests the effects of the WeatherModel on different weather conditions.
+     * This method simulates the impact of natural disasters on various weather states
+     * and prints the original and altered weather states for comparison.
+     * 
+     * @param weatherModel
+     */
     private static void testWeatherModelEffects(WeatherModel weatherModel) {
+        // Array of different weather conditions to test
         String[] weatherConditions = {"sunny","cloudy","rainy","stromy","snowy","windy","hail"};
 
+        // Loop through each weather condition
         for (String currentWeather : weatherConditions) {
+            // Simulate the effect of a natural disaster on the current weather condition
             String alteredWeather = weatherModel.simulateNaturalDisaster(currentWeather);
+
+            // Print out the original and altered weather conditions
             System.out.println("Original Weather: " + currentWeather + " | Altered by Disaster: " + alteredWeather);
         }
     }
