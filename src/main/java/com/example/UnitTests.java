@@ -28,7 +28,7 @@ public class UnitTests {
         // C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/
         // src/main/java/com/example/
         // C:/Users/David/Documents/GitHub/CRCP-Final-Project-Asare/src/main/java/com/example
-        List<String> data = generator.readAndPreprocessWeatherData("src/main/java/com/example/Test_Data.txt");
+        List<String> data = generator.readAndPreprocessWeatherData("C:/Users/robot/Labs/CRCP-Final-Project-Asare/src/main/java/com/example/Test_Data.txt");
         System.out.println("Read and preprocessed Weather Data: " + data);
     }
 
