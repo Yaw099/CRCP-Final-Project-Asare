@@ -1,0 +1,24 @@
+package com.example;
+
+import java.util.*;
+
+public class WeatherDataParser {
+    
+    private List<WeatherDay> weatherDays;
+
+    public WeatherDataParser(String filePath) {
+        this.weatherDays = readCsvFile(filePath);
+    }
+
+    private List<WeatherDay> readCsvFile(String filepath) {
+    // Logic to read the CSV file and convert each line into a WeatherDay object
+    return new ArrayList<>(); // Placeholder
+    }
+
+    public List<WeatherDay> getWeatherDays() {
+        return weatherDays;
+    }
+
+    
+}
+

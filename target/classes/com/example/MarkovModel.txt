@@ -1,0 +1,22 @@
+package com.example;
+
+import java.util.*;
+
+public class MarkovModel {
+    private int currentOrder;
+    private List<WeatherDay> weatherData;
+
+    public MarkovModel(List<WeatherDay> wd) {
+        this.weatherData = weatherData;
+        this.currentOrder = 1; // Starting order
+    }
+
+    public void updateOrder(String currentDate) {
+
+    }
+
+    public WeatherDay predictTomorrow(String currentDate) {
+        // Placeholder
+        return new WeatherDay("predictedDate", 0, 0, 0, 0.f, 0, 0, "predictedDeparture", 0.f, "predictedDepth");
+    }
+}
