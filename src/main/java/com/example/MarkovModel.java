@@ -16,16 +16,16 @@ public class MarkovModel {
     /**
      * Initializes the Markov Model with weather data.
      *
-     * @param weatherData The historical weather data to base predictions on.
+     * @param wd The historical weather data to base predictions on.
      */
     public MarkovModel(List<WeatherDay> wd) {
-        this.weatherData = wd;
-        this.currentOrder = 1; // Starting order
+        this.weatherData = wd; // Assigning the provided weather data to the class variable.
+        this.currentOrder = 1; // Initializing the order of the Markov chain.
     }
 
     /**
      * Updates the order of the Markov Model based on the current date.
-     * The order increases as each day passes until December 25th.
+     * The order increases as each day passes until December 31st.
      *
      * @param currentDate The current date in the format DD/MM/YYYY.
      */
