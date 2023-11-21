@@ -12,7 +12,7 @@ import java.util.Map;
 public class MarkovModel {
     private int currentOrder;
     private List<WeatherDay> weatherData;
-    private Map<Integer, Map<Integer, Double>> transitionProbabilities;
+    private Map<Float, Map<Float, Double>> transitionProbabilities;
 
     /**
      * Initializes the Markov Model with weather data.
@@ -113,17 +113,17 @@ public class MarkovModel {
 
         // Loop over the weather data
         for (int i = 0; i < weatherData.size() - 1; i++) {
-            int currentState = stateRepresentation(weatherData.get(i));
-            int nextState = stateRepresentation(weatherData.get(i + 1));
+            float currentState = stateRepresentation(weatherData.get(i));
+            float nextState = stateRepresentation(weatherData.get(i + 1));
     
             transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
-            Map<Integer, Double> stateTransition = transitionProbabilities.get(currentState);
+            Map<Float, Double> stateTransition = transitionProbabilities.get(currentState);
             stateTransition.put(nextState, stateTransition.getOrDefault(nextState, 0.0) + 1);
         }
     
 
         // Normalize the probabilities
-        for (Map<Integer, Double> transitions : transitionProbabilities.values()) {
+        for (Map<Float, Double> transitions : transitionProbabilities.values()) {
             double totalTransitions = transitions.values().stream().mapToDouble(Double::doubleValue).sum();
             transitions.replaceAll((state, count) -> count / totalTransitions);
         }

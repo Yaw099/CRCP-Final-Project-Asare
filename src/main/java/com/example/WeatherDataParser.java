@@ -71,7 +71,7 @@ public class WeatherDataParser {
         int HDD = Integer.parseInt(values[5]);
         int CDD = Integer.parseInt(values[6]);
         String precipitation = values[7];
-        float new_snow = Float.parseFloat(values[8]);
+        String new_snow = values[8];
         String snow_depth = values[9];
 
         return new WeatherDay(date, tmax, tmin, tavg, departure, HDD, CDD, precipitation, new_snow, snow_depth);

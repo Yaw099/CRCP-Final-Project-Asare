@@ -9,10 +9,10 @@ public class WeatherDay {
     private int HDD;
     private int CDD;
     private String precipitation;
-    private float new_snow;
+    private String new_snow;
     private String snow_depth;
 
-    public WeatherDay(String date, float tmax, float tmin, float tavg, float departure, int HDD, int CDD, String precipitation, float new_snow, String snow_depth) {
+    public WeatherDay(String date, float tmax, float tmin, float tavg, float departure, int HDD, int CDD, String precipitation, String new_snow, String snow_depth) {
         this.date = date;
         this.tmax = tmax;
         this.tmin = tmin;
@@ -33,7 +33,7 @@ public class WeatherDay {
     public int getHDD(){return HDD;}
     public int getCDD(){return CDD;}
     public String getPreciptation(){return precipitation;}
-    public float getNewSnow(){return new_snow;}
+    public String getNewSnow(){return new_snow;}
     public String getSnowDepth(){return snow_depth;}
 
 
