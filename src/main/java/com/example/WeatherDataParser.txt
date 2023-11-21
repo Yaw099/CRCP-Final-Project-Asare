@@ -64,17 +64,11 @@ public class WeatherDataParser {
      */
     private WeatherDay parseToWeatherDay(String[] values) {
         String date = values[0];
-        float tmax = Float.parseFloat(values[1]);
-        float tmin = Float.parseFloat(values[2]);
-        float tavg = Float.parseFloat(values[3]);
-        float departure = Float.parseFloat(values[4]);
-        int HDD = Integer.parseInt(values[5]);
-        int CDD = Integer.parseInt(values[6]);
-        String precipitation = values[7];
-        String new_snow = values[8];
-        String snow_depth = values[9];
+        float tmax = Float.parseFloat(values[1].replace("\"", ""));
+        float tmin = Float.parseFloat(values[2].replace("\"", ""));
+        float tavg = Float.parseFloat(values[3].replace("\"", ""));
 
-        return new WeatherDay(date, tmax, tmin, tavg, departure, HDD, CDD, precipitation, new_snow, snow_depth);
+        return new WeatherDay(date, tmax, tmin, tavg);
     }
 
     /**

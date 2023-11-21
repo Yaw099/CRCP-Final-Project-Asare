@@ -5,38 +5,36 @@ public class WeatherDay {
     private float tmax;
     private float tmin;
     private float tavg;
-    private float departure;
-    private int HDD;
-    private int CDD;
-    private String precipitation;
-    private String new_snow;
-    private String snow_depth;
 
-    public WeatherDay(String date, float tmax, float tmin, float tavg, float departure, int HDD, int CDD, String precipitation, String new_snow, String snow_depth) {
+
+    public WeatherDay(String date, float tmax, float tmin, float tavg) {
         this.date = date;
         this.tmax = tmax;
         this.tmin = tmin;
         this.tavg = tavg;
-        this.departure = departure;
-        this.HDD = HDD;
-        this.CDD = CDD;
-        this.precipitation = precipitation;
-        this.new_snow = new_snow;
-        this.snow_depth = snow_depth;
+    }
+ 
+
+    public WeatherDay(){
+        this.date = "End of year";
     }
 
     public String getDate(){return date;}
     public float getMax(){return tmax;}
     public float getMin(){return tmin;}    
     public float getAvg(){return tavg;}
-    public float getDeparture(){return departure;}
-    public int getHDD(){return HDD;}
-    public int getCDD(){return CDD;}
-    public String getPreciptation(){return precipitation;}
-    public String getNewSnow(){return new_snow;}
-    public String getSnowDepth(){return snow_depth;}
 
+    public String toCSVString() {
+        // Format the WeatherDay data as a CSV line
+        return String.format("%s,%f,%f,%f", this.date, this.tmax, this.tmin, this.tavg);
+    }
 
-
+    @Override
+    public String toString() {
+        return "WeatherDay{" +
+        ", tmax = " + tmax +
+        ", tmin = " + tmin +
+        ", Predicted tavg = " + tavg + '}';
+    }
 
 }
