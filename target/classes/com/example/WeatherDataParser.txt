@@ -82,21 +82,22 @@ public class WeatherDataParser {
      *
      * @return A map with months as keys and average temperatures as values.
      */
-    // public Map<String, Double> calcMonthlyAvgs() {
-    //     Map<String, List<Integer>> monthlyTemps = new HashMap<>();
-    //     Map<String, Double> monthlyAvgs = new HashMap<>();
+    public Map<String, Double> calcMonthlyAvgs() {
+        Map<String, List<Float>> monthlyTemps = new HashMap<>();
+        Map<String, Double> monthlyAvgs = new HashMap<>();
 
-    //     SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy");
 
-    //     for (WeatherDay day : weatherDays) {
-    //         String month = monthFormat.format(day.getDate());
-    //         monthlyTemps.putIfAbsent(month, new ArrayList<Integer>());
-    //         monthlyTemps.get(month).add(day.getAvg());
-    //     }
-    //     for (Map.Entry<String, List<Integer>> entry : monthlyTemps.entrySet()) {
-    //         double average = entry.getValue().stream().mapToInt(Integer::intValue).average().orElse(0);
-
-    //     }
-    // }
+        for (WeatherDay day : weatherDays) {
+            String month = monthFormat.format(day.getDate());
+            monthlyTemps.putIfAbsent(month, new ArrayList<>());
+            monthlyTemps.get(month).add(day.getAvg());
+        }
+        for (Map.Entry<String, List<Float>> entry : monthlyTemps.entrySet()) {
+            double average = entry.getValue().stream().mapToInt(Integer::intValue).average().orElse(0);
+            monthlyAvgs.put(entry.getKey(), average);
+        }
+        return monthlyAvgs;
+    }
 }
 

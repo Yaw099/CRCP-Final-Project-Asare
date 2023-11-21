@@ -2,9 +2,9 @@ package com.example;
 
 public class WeatherDay {
     private String date;
-    private int tmax;
-    private int tmin;
-    private int tavg;
+    private float tmax;
+    private float tmin;
+    private float tavg;
     private float departure;
     private int HDD;
     private int CDD;
@@ -12,7 +12,7 @@ public class WeatherDay {
     private float new_snow;
     private String snow_depth;
 
-    public WeatherDay(String date, int tmax, int tmin, int tavg, float departure, int HDD, int CDD, String precipitation, float new_snow, String snow_depth) {
+    public WeatherDay(String date, float tmax, float tmin, float tavg, float departure, int HDD, int CDD, String precipitation, float new_snow, String snow_depth) {
         this.date = date;
         this.tmax = tmax;
         this.tmin = tmin;
@@ -26,9 +26,9 @@ public class WeatherDay {
     }
 
     public String getDate(){return date;}
-    public int getMax(){return tmax;}
-    public int getMin(){return tmin;}    
-    public int getAvg(){return tavg;}
+    public float getMax(){return tmax;}
+    public float getMin(){return tmin;}    
+    public float getAvg(){return tavg;}
     public float getDeparture(){return departure;}
     public int getHDD(){return HDD;}
     public int getCDD(){return CDD;}

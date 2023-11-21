@@ -64,9 +64,9 @@ public class WeatherDataParser {
      */
     private WeatherDay parseToWeatherDay(String[] values) {
         String date = values[0];
-        int tmax = Integer.parseInt(values[1]);
-        int tmin = Integer.parseInt(values[2]);
-        int tavg = Integer.parseInt(values[3]);
+        float tmax = Float.parseFloat(values[1]);
+        float tmin = Float.parseFloat(values[2]);
+        float tavg = Float.parseFloat(values[3]);
         float departure = Float.parseFloat(values[4]);
         int HDD = Integer.parseInt(values[5]);
         int CDD = Integer.parseInt(values[6]);
@@ -82,21 +82,22 @@ public class WeatherDataParser {
      *
      * @return A map with months as keys and average temperatures as values.
      */
-    // public Map<String, Double> calcMonthlyAvgs() {
-    //     Map<String, List<Integer>> monthlyTemps = new HashMap<>();
-    //     Map<String, Double> monthlyAvgs = new HashMap<>();
+    public Map<String, Double> calcMonthlyAvgs() {
+        Map<String, List<Float>> monthlyTemps = new HashMap<>();
+        Map<String, Double> monthlyAvgs = new HashMap<>();
 
-    //     SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy");
 
-    //     for (WeatherDay day : weatherDays) {
-    //         String month = monthFormat.format(day.getDate());
-    //         monthlyTemps.putIfAbsent(month, new ArrayList<Integer>());
-    //         monthlyTemps.get(month).add(day.getAvg());
-    //     }
-    //     for (Map.Entry<String, List<Integer>> entry : monthlyTemps.entrySet()) {
-    //         double average = entry.getValue().stream().mapToInt(Integer::intValue).average().orElse(0);
-
-    //     }
-    // }
+        for (WeatherDay day : weatherDays) {
+            String month = monthFormat.format(day.getDate());
+            monthlyTemps.putIfAbsent(month, new ArrayList<>());
+            monthlyTemps.get(month).add(day.getAvg());
+        }
+        for (Map.Entry<String, List<Float>> entry : monthlyTemps.entrySet()) {
+            double average = entry.getValue().stream().mapToDouble(Float::doubleValue).average().orElse(0);
+            monthlyAvgs.put(entry.getKey(), average);
+        }
+        return monthlyAvgs;
+    }
 }
 

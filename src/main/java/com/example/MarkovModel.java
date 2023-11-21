@@ -1,11 +1,18 @@
 package com.example;
 
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MarkovModel {
     private int currentOrder;
     private List<WeatherDay> weatherData;
-    private Map<String, Map<String, Double>> transitionProbabilities;
+    private Map<Float, Map<Float, Double>> transitionProbabilities;
 
     /**
      * Initializes the Markov Model with weather data.
@@ -19,11 +26,47 @@ public class MarkovModel {
 
     /**
      * Updates the order of the Markov Model based on the current date.
+     * The order increases as each day passes until December 25th.
      *
      * @param currentDate The current date in the format DD/MM/YYYY.
      */
     public void updateOrder(String currentDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date date = dateFormat.parse(currentDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
 
+            // Set the target date to December 31th of the year 2019
+            Calendar targetDate = Calendar.getInstance();
+            targetDate.set(Calendar.MONTH, Calendar.DECEMBER);
+            targetDate.set(Calendar.DAY_OF_MONTH, 31);
+            targetDate.set(Calendar.YEAR, 2019); //Year of the Dataset
+
+            // Update the order based on the number of days until December 31st, 2019
+            if (calendar.before(targetDate)) {
+                int daysUntilTarget = daysBetween(calendar, targetDate);
+                this.currentOrder = daysUntilTarget;
+            } else {
+                this.currentOrder = 1; // Reset to 1 after December 31st, 2019
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Calculates the number of days between two Calendar dates.
+     *
+     * @param start The start date.
+     * @param end The end date.
+     * @return The number of days between the start and end dates.
+     */
+    private int daysBetween(Calendar start, Calendar end) {
+        long startInMillis = start.getTimeInMillis();
+        long endInMillis = end.getTimeInMillis();
+        long differenceInMillis = endInMillis - startInMillis;
+        return (int) (differenceInMillis / (24 * 60 * 60 * 1000));
     }
 
     /**
@@ -33,30 +76,149 @@ public class MarkovModel {
      * @return A WeatherDay object representing the predicted weather.
      */
     public WeatherDay predictTomorrow(String currentDate) {
-        // Placeholder
-        return new WeatherDay("predictedDate", 0, 0, 0, 0.f, 0, 0, "predictedDeparture", 0.f, "predictedDepth");
+        // Find the index of the current date in the weatherData list
+        int currnentDateIndex = findIndexOfDate(currentDate);
+        if (currnentDateIndex == -1 || currnentDateIndex == weatherData.size() -1){
+            // If the current date is not found or it's the last date in the dataset, return a default or the last known WeatherDay
+            return weatherData.get(weatherData.size());
+        }
+
+        // Get the current WeatherDay based on the currentDate
+        WeatherDay currentDay = weatherData.get(currnentDateIndex);
+
+
+        return weatherData.get(currnentDateIndex + 1);
     }
 
     /**
-     * Initializes the transition probabilities of the Markov Model based on historical weather data.
+     * Finds the index of the given date in the weatherData list.
+     *
+     * @param date The date to find in the format DD/MM/YYYY.
+     * @return The index of the date in the weatherData list, or -1 if not found.
      */
-    public void initializeTransitionProbabilities() {
+    private int findIndexOfDate(String date) {
+        for (int i = 0; i < weatherData.size(); i++) {
+            if (weatherData.get(i).getDate().equals(date)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Calculates the transition probabilities between different weather states.
+     */
+    public void calcTransitionProbs() {
         transitionProbabilities = new HashMap<>();
 
-        // Example: Process weather data to calculate initial transition probabilities
+        // Loop over the weather data
         for (int i = 0; i < weatherData.size() - 1; i++) {
-            String currentState =  weatherData.get(i).toString(); // Simplified representation of weather state
-            String nextState = weatherData.get(i + 1).toString();
-
+            float currentState = stateRepresentation(weatherData.get(i));
+            float nextState = stateRepresentation(weatherData.get(i + 1));
+    
             transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
-            Map<String, Double> stateTransitions = transitionProbabilities.get(currentState);
-            stateTransitions.put(nextState, stateTransitions.getOrDefault(nextState, 0.0) + 1);
+            Map<Float, Double> stateTransition = transitionProbabilities.get(currentState);
+            stateTransition.put(nextState, stateTransition.getOrDefault(nextState, 0.0) + 1);
         }
+    
 
-        // Normalize probabilities
-        for (Map<String, Double> stateTransitions : transitionProbabilities.values()) {
-            double total = stateTransitions.values().stream().mapToDouble(Double::doubleValue).sum();
-            stateTransitions.replaceAll((key, value) -> value / total);
+        // Normalize the probabilities
+        for (Map<Float, Double> transitions : transitionProbabilities.values()) {
+            double totalTransitions = transitions.values().stream().mapToDouble(Double::doubleValue).sum();
+            transitions.replaceAll((state, count) -> count / totalTransitions);
         }
     }
+
+    /**
+     * Generates a simplified state representation for a WeatherDay.
+     * 
+     * @param day The WeatherDay object.
+     * @return An int representing the state.
+     */
+    private float stateRepresentation(WeatherDay day) {
+        // Return the average temperature as the state
+        return day.getAvg();
+    }
+
+    // /**
+    //  * Initializes the transition probabilities of the Markov Model based on historical weather data.
+    //  */
+    // public void initializeTransitionProbabilities() {
+    //     transitionProbabilities = new HashMap<>();
+
+    //     // Example: Process weather data to calculate initial transition probabilities
+    //     for (int i = 0; i < weatherData.size() - 1; i++) {
+    //         String currentState =  weatherData.get(i).toString(); // Simplified representation of weather state
+    //         String nextState = weatherData.get(i + 1).toString();
+
+    //         transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
+    //         Map<String, Double> stateTransitions = transitionProbabilities.get(currentState);
+    //         stateTransitions.put(nextState, stateTransitions.getOrDefault(nextState, 0.0) + 1);
+    //     }
+
+    //     // Normalize probabilities
+    //     for (Map<String, Double> stateTransitions : transitionProbabilities.values()) {
+    //         double total = stateTransitions.values().stream().mapToDouble(Double::doubleValue).sum();
+    //         stateTransitions.replaceAll((key, value) -> value / total);
+    //     }
+    // }
+
+    // /**
+    //  * Updates the Markov Model with new weather data.
+    //  *
+    //  * @param newWeatherData The new weather data to be incorporated.
+    //  */
+    // public void updateModel(List<WeatherDay> newWeatherData) {
+    //     // Placeholder for updating the model with new data
+    //     // Logic to integrate new data into the existing model goes here
+    // }
+
+    // /**
+    //  * Analyzes the accuracy of the Markov Model's predictions.
+    //  *
+    //  * @param actualWeatherData The actual weather data for comparison.
+    //  * @return The accuracy metric of the model.
+    //  */
+    // public double analyzeModelAccuracy(List<WeatherDay> actualWeatherData) {
+    //     // Placeholder for accuracy calculation
+    //     double accuracy = 0.0;
+    //     // Logic to compare predicted data with actual data and calculate accuracy
+    //     return accuracy;
+    // }
+
+    // /**
+    //  * Predicts the weather for a specific duration.
+    //  *
+    //  * @param startDate The start date for prediction.
+    //  * @param numberOfDays The number of days to predict.
+    //  * @return A list of predicted WeatherDay objects.
+    //  */
+    // public List<WeatherDay> predictWeatherForDuration(String startDate, int numberOfDays) {
+    //     // Placeholder for multi-day weather prediction
+    //     List<WeatherDay> predictions = new ArrayList<>();
+    //     // Logic to predict weather for each day in the specified duration
+    //     return predictions;
+    // }
+
+    // /**
+    //  * Saves the current state of the Markov Model.
+    //  *
+    //  * @param saveFilePath The file path to save the model state.
+    //  */
+    // public void saveModelState(String saveFilePath) {
+    //     // Placeholder for saving the model state
+    //     // Logic to serialize and save the model state goes here
+    // }
+
+    // /**
+    //  * Loads a saved state into the Markov Model.
+    //  *
+    //  * @param loadFilePath The file path from which to load the model state.
+    //  */
+    // public void loadModelState(String loadFilePath) {
+    //     // Placeholder for loading the model state
+    //     // Logic to deserialize and load the model state goes here
+    // }
+
+
 }
