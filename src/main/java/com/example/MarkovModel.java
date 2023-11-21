@@ -2,7 +2,6 @@ package com.example;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import java.util.Map;
 public class MarkovModel {
     private int currentOrder;
     private List<WeatherDay> weatherData;
-    private Map<Float, Map<Float, Double>> transitionProbabilities;
+    private Map<String, Map<String, Double>> transitionProbabilities;
 
     /**
      * Initializes the Markov Model with weather data.
@@ -20,7 +19,7 @@ public class MarkovModel {
      * @param weatherData The historical weather data to base predictions on.
      */
     public MarkovModel(List<WeatherDay> wd) {
-        this.weatherData = weatherData;
+        this.weatherData = wd;
         this.currentOrder = 1; // Starting order
     }
 
@@ -69,6 +68,8 @@ public class MarkovModel {
         return (int) (differenceInMillis / (24 * 60 * 60 * 1000));
     }
 
+    
+
     /**
      * Predicts the next day's weather based on the Markov Model.
      *
@@ -77,17 +78,54 @@ public class MarkovModel {
      */
     public WeatherDay predictTomorrow(String currentDate) {
         // Find the index of the current date in the weatherData list
-        int currnentDateIndex = findIndexOfDate(currentDate);
-        if (currnentDateIndex == -1 || currnentDateIndex == weatherData.size() -1){
-            // If the current date is not found or it's the last date in the dataset, return a default or the last known WeatherDay
-            return weatherData.get(weatherData.size());
+        int currentDateIndex = findIndexOfDate(currentDate);
+        if (currentDateIndex == -1 || currentDateIndex < currentOrder - 1 || currentDateIndex >= weatherData.size() - 1) {
+            // Handle cases where there's not enough data to form a complete state or if it's the last date
+            return new WeatherDay();
         }
 
-        // Get the current WeatherDay based on the currentDate
-        WeatherDay currentDay = weatherData.get(currnentDateIndex);
+        // Create the current state from the sequence of the last currentOrder days
+        String currentState = createCombinedState(currentDateIndex - currentOrder + 1, currentOrder);
 
+         // Get the most probable next state
+         Map<String, Double> possibleNextStates = transitionProbabilities.getOrDefault(currentState, new HashMap<>());
+         String mostProbableNextState = selectMostProbableState(possibleNextStates);
 
-        return weatherData.get(currnentDateIndex + 1);
+        // // Get the current WeatherDay based on the currentDate
+        // WeatherDay currentDay = weatherData.get(currnentDateIndex);
+
+        return createWeatherDayFromState(mostProbableNextState, currentDateIndex);
+        // return weatherData.get(currentDateIndex + 1);
+    }
+
+    private String selectMostProbableState(Map<String, Double> possibleNextStates) {
+        String mostProbableState = null;
+        double maxProbability = -1.0;
+    
+        for (Map.Entry<String, Double> entry : possibleNextStates.entrySet()) {
+            if (entry.getValue() > maxProbability) {
+                mostProbableState = entry.getKey();
+                maxProbability = entry.getValue();
+            }
+        }
+    
+        return mostProbableState != null ? mostProbableState : "defaultState"; // Replace with an appropriate default state
+    }
+
+    private WeatherDay createWeatherDayFromState(String state, int currentDateIndex) {
+        if (state == null || state.isEmpty() || currentDateIndex < 0 || currentDateIndex >= weatherData.size()) {
+            return new WeatherDay();
+        }
+        
+        String[] temps = state.split(",");
+        float predictedTavg = Float.parseFloat(temps[temps.length - 1]); // Taking the last temperature in the sequence
+    
+        // Get the last day's weather data to keep the current values of date, tmax, and tmin
+        WeatherDay lastDay = weatherData.get(currentDateIndex);
+
+        // Create a new WeatherDay with the predicted temperature
+        // Other parameters are set to default values or estimated values
+        return new WeatherDay(lastDay.getDate(), lastDay.getMax(), lastDay.getMin(), predictedTavg);
     }
 
     /**
@@ -112,21 +150,45 @@ public class MarkovModel {
         transitionProbabilities = new HashMap<>();
 
         // Loop over the weather data
-        for (int i = 0; i < weatherData.size() - 1; i++) {
-            float currentState = stateRepresentation(weatherData.get(i));
-            float nextState = stateRepresentation(weatherData.get(i + 1));
+        for (int i = 0; i < weatherData.size() - currentOrder; i++) {
+            // Create a state from a sequence of days
+        String currentState = createCombinedState(i, currentOrder);
+        String nextState = createCombinedState(i + 1, currentOrder);
+
+        transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
+        Map<String, Double> stateTransitions = transitionProbabilities.get(currentState);
+        stateTransitions.put(nextState, stateTransitions.getOrDefault(nextState, 0.0) + 1);
+
+            // float currentState = stateRepresentation(weatherData.get(i));
+            // float nextState = stateRepresentation(weatherData.get(i + 1));
     
-            transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
-            Map<Float, Double> stateTransition = transitionProbabilities.get(currentState);
-            stateTransition.put(nextState, stateTransition.getOrDefault(nextState, 0.0) + 1);
+            // transitionProbabilities.putIfAbsent(currentState, new HashMap<>());
+            // Map<Float, Double> stateTransition = transitionProbabilities.get(currentState);
+            // stateTransition.put(nextState, stateTransition.getOrDefault(nextState, 0.0) + 1);
         }
     
 
         // Normalize the probabilities
-        for (Map<Float, Double> transitions : transitionProbabilities.values()) {
-            double totalTransitions = transitions.values().stream().mapToDouble(Double::doubleValue).sum();
-            transitions.replaceAll((state, count) -> count / totalTransitions);
+        for (Map.Entry<String, Map<String, Double>> entry : transitionProbabilities.entrySet()) {
+        double totalTransitions = entry.getValue().values().stream().mapToDouble(Double::doubleValue).sum();
+        Map<String, Double> normalizedTransitions = entry.getValue();
+        
+            for (String nextState : normalizedTransitions.keySet()) {
+            normalizedTransitions.put(nextState, normalizedTransitions.get(nextState) / totalTransitions);
+            }
         }
+        // for (Map<Float, Double> transitions : transitionProbabilities.values()) {
+        //     double totalTransitions = transitions.values().stream().mapToDouble(Double::doubleValue).sum();
+        //     transitions.replaceAll((state, count) -> count / totalTransitions);
+        // }
+    }
+
+    private String createCombinedState(int startIndex, int order) {
+    StringBuilder stateBuilder = new StringBuilder();
+    for (int i = startIndex; i < startIndex + order; i++) {
+        stateBuilder.append(stateRepresentation(weatherData.get(i))).append(",");
+    }
+    return stateBuilder.toString();
     }
 
     /**

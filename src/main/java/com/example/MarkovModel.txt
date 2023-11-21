@@ -20,7 +20,7 @@ public class MarkovModel {
      * @param weatherData The historical weather data to base predictions on.
      */
     public MarkovModel(List<WeatherDay> wd) {
-        this.weatherData = weatherData;
+        this.weatherData = wd;
         this.currentOrder = 1; // Starting order
     }
 
@@ -80,7 +80,7 @@ public class MarkovModel {
         int currnentDateIndex = findIndexOfDate(currentDate);
         if (currnentDateIndex == -1 || currnentDateIndex == weatherData.size() -1){
             // If the current date is not found or it's the last date in the dataset, return a default or the last known WeatherDay
-            return weatherData.get(weatherData.size());
+            return weatherData.get(weatherData.size() - 1);
         }
 
         // Get the current WeatherDay based on the currentDate
